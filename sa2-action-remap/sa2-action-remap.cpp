@@ -47,35 +47,38 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 	char count = data2->ActionWindowItemCount;
 	int i = 0;
 
-	if ((signed int)count > 0)
+	if (count)
 	{
-		do
+		if ((signed int)count > 0)
 		{
-			if (data2->field_D[0] == data2->ActionWindowItems[i])
+			do
 			{
-				break;
-			}
-			++i;
-		} while (i < (signed int)count);
-		action = data2->field_D[0];
-	}
+				if (data2->field_D[0] == data2->ActionWindowItems[i])
+				{
+					break;
+				}
+				++i;
+			} while (i < (signed int)count);
+			action = data2->field_D[0];
+		}
 
-	if ((DWORD)count == i)
-	{
-		action = data2->ActionWindowItems[0];
-	}
-	
-	// Action check for light dash.
-	if (action == Action_LightDash)
-	{
-		data2->field_D[1] = action;
+		if ((DWORD)count == i)
+		{
+			action = data2->ActionWindowItems[0];
+		}
 
-		// Just nope right out of here if Y isn't pressed.
-		if (!(Controllers[pnum].PressedButtons & Buttons_Y))
-			return 0;
+		// Action check for light dash.
+		if (action == Action_LightDash)
+		{
+			data2->field_D[1] = action;
 
-		PerformLightDash(sonicdata, data2, data1);
-		return 1; // Original function returns this value on light dash.
+			// Just nope right out of here if Y isn't pressed.
+			if (!(Controllers[pnum].PressedButtons & Buttons_Y))
+				return 0;
+
+			PerformLightDash(sonicdata, data2, data1);
+			return 1; // Original function returns this value on light dash.
+		}
 	}
 
 	// If all those conditions fail, just call the original and let it handle it.
