@@ -42,9 +42,9 @@ void __stdcall PerformLightDash(SonicCharObj2 *sonicdata, CharObj2Base *basedata
 static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, CharObj2* data2, SonicCharObj2* sonicdata)
 {
 	// This code is based on the pseudocode of the original function
-	auto pnum = data2->PlayerNum;
-	auto idk = data2->field_D[0];
-	auto count = data2->ActionWindowItemCount;
+	char pnum = data2->PlayerNum;
+	char action = data2->field_D[0];
+	char count = data2->ActionWindowItemCount;
 	int i = 0;
 
 	if ((signed int)count > 0)
@@ -57,18 +57,18 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 			}
 			++i;
 		} while (i < (signed int)count);
-		idk = data2->field_D[0];
+		action = data2->field_D[0];
 	}
 
 	if ((DWORD)count == i)
 	{
-		idk = data2->ActionWindowItems[0];
+		action = data2->ActionWindowItems[0];
 	}
 	
-	// Some arbitrary math from the original function - all we need to know is 49 is light dash.
-	if (idk - 10 == 49)
+	// Action check for light dash.
+	if (action == Action_LightDash)
 	{
-		data2->field_D[1] = idk;
+		data2->field_D[1] = action;
 
 		// Just nope right out of here if Y isn't pressed.
 		if (!(Controllers[pnum].PressedButtons & Buttons_Y))
