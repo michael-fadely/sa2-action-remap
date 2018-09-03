@@ -5,7 +5,7 @@ static Trampoline trampoline(0x007230E0, 0x007230E5, Sonic_CheckActionWindow_asm
 
 extern "C"
 {
-	EXPORT ModInfo SA2ModInfo = { ModLoaderVer };
+	EXPORT ModInfo SA2ModInfo = { ModLoaderVer, nullptr, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0 };
 }
 
 static Sint32 __cdecl Sonic_CheckActionWindow_orig(CharObj1* data1, void* entity2, CharObj2* data2, SonicCharObj2* sonicdata)
@@ -25,9 +25,9 @@ static Sint32 __cdecl Sonic_CheckActionWindow_orig(CharObj1* data1, void* entity
 	return result;
 }
 
-// PerformLightDash(SonicCharObj2 *sonicdata@<eax>, CharObj2Base *basedata@<edx>, EntityData1 *entity@<ecx>)
+// Sonic_PerformLightDash(SonicCharObj2 *sonicdata@<eax>, CharObj2Base *basedata@<edx>, EntityData1 *entity@<ecx>)
 // Sets action, speed, probably some timers
-void __stdcall PerformLightDash(SonicCharObj2 *sonicdata, CharObj2Base *basedata, CharObj1 *entity)
+void __stdcall Sonic_PerformLightDash(SonicCharObj2* sonicdata, CharObj2Base* basedata, CharObj1* entity)
 {
 	__asm
 	{
@@ -42,14 +42,14 @@ void __stdcall PerformLightDash(SonicCharObj2 *sonicdata, CharObj2Base *basedata
 static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, CharObj2* data2, SonicCharObj2* sonicdata)
 {
 	// This code is based on the pseudocode of the original function
-	char pnum = data2->PlayerNum;
+	int  pnum   = data2->PlayerNum;
 	char action = data2->field_D[0];
-	char count = data2->ActionWindowItemCount;
-	int i = 0;
+	int  count  = data2->ActionWindowItemCount;
+	int  i      = 0;
 
 	if (count)
 	{
-		if ((signed int)count > 0)
+		if (count > 0)
 		{
 			do
 			{
@@ -58,11 +58,11 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 					break;
 				}
 				++i;
-			} while (i < (signed int)count);
+			} while (i < count);
 			action = data2->field_D[0];
 		}
 
-		if ((DWORD)count == i)
+		if (count == i)
 		{
 			action = data2->ActionWindowItems[0];
 		}
@@ -74,9 +74,11 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 
 			// Just nope right out of here if Y isn't pressed.
 			if (!(Controllers[pnum].PressedButtons & Buttons_Y))
+			{
 				return 0;
+			}
 
-			PerformLightDash(sonicdata, data2, data1);
+			Sonic_PerformLightDash(sonicdata, data2, data1);
 			return 1; // Original function returns this value on light dash.
 		}
 	}
