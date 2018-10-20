@@ -15,12 +15,12 @@ static Sint32 __cdecl Sonic_CheckActionWindow_orig(CharObj1* data1, void* entity
 	__asm
 	{
 		push [sonicdata]
-		mov ecx, [data2]
-		mov edx, [entity2]
-		mov eax, [data1]
+		mov  ecx, [data2]
+		mov  edx, [entity2]
+		mov  eax, [data1]
 		call target
-		add esp, 4
-		mov result, eax
+		add  esp, 4
+		mov  result, eax
 	}
 	return result;
 }
@@ -31,10 +31,10 @@ void __stdcall Sonic_PerformLightDash(SonicCharObj2* sonicdata, CharObj2Base* ba
 {
 	__asm
 	{
-		mov esi, 00724010h
-		mov eax, [sonicdata]
-		mov edx, [basedata]
-		mov ecx, [entity]
+		mov  esi, 00724010h
+		mov  eax, [sonicdata]
+		mov  edx, [basedata]
+		mov  ecx, [entity]
 		call esi
 	}
 }
@@ -67,7 +67,6 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 			action = data2->ActionWindowItems[0];
 		}
 
-		// Action check for light dash.
 		if (action == Action_LightDash)
 		{
 			data2->field_D[1] = action;
@@ -79,11 +78,11 @@ static Sint32 __cdecl Sonic_CheckActionWindow(CharObj1* data1, void* entity2, Ch
 			}
 
 			Sonic_PerformLightDash(sonicdata, data2, data1);
-			return 1; // Original function returns this value on light dash.
+			return 1; // Original function returns this value upon light dash.
 		}
 	}
 
-	// If all those conditions fail, just call the original and let it handle it.
+	// If all those conditions fail, let the original code handle it.
 	return Sonic_CheckActionWindow_orig(data1, entity2, data2, sonicdata);
 }
 
@@ -96,10 +95,10 @@ static void __declspec(naked) Sonic_CheckActionWindow_asm()
 		push edx
 		push eax
 		call Sonic_CheckActionWindow
-		add esp, 4 // eax
-		pop edx
-		pop ecx
-		add esp, 4
+		add  esp, 4 // eax
+		pop  edx
+		pop  ecx
+		add  esp, 4
 		retn
 	}
 }
